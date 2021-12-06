@@ -6,7 +6,7 @@ from sklearn.metrics import mean_absolute_error
 from sklearn.metrics import mean_squared_error
 import math
 import numpy as np
-#import cse163_utils  # noqa: F401
+import os
 
 # Sklearn imports
 from sklearn.neighbors import KNeighborsClassifier
@@ -20,7 +20,8 @@ from sklearn.metrics import mean_squared_error as rmse
 from sklearn.metrics import confusion_matrix
 from sklearn.utils.multiclass import unique_labels
 
-#print(__file__)
+os.chdir(os.path.dirname(os.path.dirname(__file__)))
+
 # read in main dataframe as df
 df = pd.read_csv('./InputData/SpotifyFeatures.csv')
 df = df.dropna()
@@ -60,7 +61,8 @@ def main():
 
     # Questions 3 and 4
     whole_data = pd.read_csv('./InputData/SpotifyFeatures.csv')
-    playlist = pd.read_csv('./InputData/Playlist_CSVs/Iron_Steel.csv', usecols=range(0, 9))
+    playlist = pd.read_csv('./InputData/Playlist_CSVs/Iron_Steel.csv',
+                           usecols=range(0, 9))
     merged = join_playlist_with_dataset(whole_data, playlist)
     playlist_zscores = set_up_zscores(whole_data, merged)
     scatterplot_zscores(playlist_zscores)
@@ -82,7 +84,8 @@ def main():
         mae = mean_absolute_error(acoustic_data, given_acoustics)
         mae_per_song[row['artist_name'] + ' \"' + row['track_name'] +
                      '\"'] = mae
-        rmse_song = math.sqrt(mean_squared_error(acoustic_data, given_acoustics))
+        rmse_song = math.sqrt(mean_squared_error(acoustic_data,
+                                                 given_acoustics))
         rmse_per_song[row['artist_name'] + ' \"' + row['track_name'] +
                       '\"'] = rmse_song
     mae_playlist = pd.Series(mae_per_song,
@@ -92,7 +95,6 @@ def main():
     print(mae_playlist.iloc[:51])
     print(rmse_playlist.iloc[:51])
     print('DONE')
-
 
 
 def plot_genre_distribution(DF):
@@ -257,7 +259,6 @@ def plot_confusion_matrix(y_true, y_pred, classes,
                     color="white" if cm[i, j] > thresh else "black")
     fig.tight_layout()
     return ax
-
 
 
 def genre_classifier_knn(genre_features, gen):
